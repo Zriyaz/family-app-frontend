@@ -12,7 +12,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_FRONTEND_REPOSITORY: family-app-frontend
-  ECS_CLUSTER: family-app-cluster
+  ECS_CLUSTER: family-app-cluster1
   ECS_FRONTEND_SERVICE: frontend-service
 
 jobs:
