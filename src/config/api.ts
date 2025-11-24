@@ -14,21 +14,23 @@ const api = axios.create({
 
 // Handle 401 errors (unauthorized)
 api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     if (error.response?.status === 401) {
-      const isAuthPage = window.location.pathname.includes('/login') || window.location.pathname.includes('/register');
-      
+      const isAuthPage =
+        window.location.pathname.includes('/login') ||
+        window.location.pathname.includes('/register');
+
       // Only call logout API if not already on auth pages (to avoid unnecessary API calls)
       if (!isAuthPage) {
         // Clear auth state
         try {
           const authStore = await import('../store/authStore');
           authStore.useAuthStore.getState().logout();
-        } catch (err) {
+        } catch {
           // Ignore errors during logout
         }
-        
+
         // Redirect to login on unauthorized
         window.location.href = '/login';
       } else {
@@ -36,7 +38,7 @@ api.interceptors.response.use(
         try {
           const authStore = await import('../store/authStore');
           authStore.useAuthStore.getState().setUser(null);
-        } catch (err) {
+        } catch {
           // Ignore errors
         }
       }

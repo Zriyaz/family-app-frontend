@@ -18,13 +18,13 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const login = useAuthStore((state) => state.login);
+  const login = useAuthStore(state => state.login);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     // Validate email
     const emailValidation = validateEmail(email);
     if (!emailValidation.valid) {
@@ -42,11 +42,13 @@ const Login = () => {
     try {
       await login(email.trim().toLowerCase(), password);
       navigate('/');
-    } catch (err: any) {
+    } catch (err) {
       // Don't expose detailed error messages to prevent information leakage
-      const errorMessage = err.response?.status === 401 
-        ? 'Invalid email or password'
-        : 'Login failed. Please try again.';
+      const error = err as { response?: { status?: number } };
+      const errorMessage =
+        error.response?.status === 401
+          ? 'Invalid email or password'
+          : 'Login failed. Please try again.';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -83,7 +85,7 @@ const Login = () => {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -95,7 +97,7 @@ const Login = () => {
               id="password"
               autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
             <Button
               type="submit"
@@ -119,4 +121,3 @@ const Login = () => {
 };
 
 export default Login;
-

@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   fetching: false,
 
   setLoading: (loading: boolean) => set({ loading }),
-  
+
   setUser: (user: User | null) => set({ user }),
 
   fetchUser: async () => {
@@ -35,12 +35,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (get().fetching) {
       return;
     }
-    
+
     try {
       set({ loading: true, fetching: true });
       const response = await api.get('/auth/me');
-      set({ user: response.data, loading: false, initialized: true, fetching: false });
-    } catch (error) {
+      set({
+        user: response.data,
+        loading: false,
+        initialized: true,
+        fetching: false,
+      });
+    } catch {
       set({ user: null, loading: false, initialized: true, fetching: false });
     }
   },
@@ -72,11 +77,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     try {
       await api.post('/auth/logout');
-    } catch (error) {
+    } catch {
       // Continue with logout even if API call fails
     } finally {
       set({ user: null, loading: false, initialized: true });
     }
   },
 }));
-
