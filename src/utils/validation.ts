@@ -7,7 +7,7 @@
  */
 export const sanitizeString = (input: string): string => {
   if (typeof input !== 'string') return '';
-  
+
   return input
     .trim()
     .replace(/[<>]/g, '') // Remove potential HTML tags
@@ -17,13 +17,15 @@ export const sanitizeString = (input: string): string => {
 /**
  * Validate and sanitize name input
  */
-export const validateName = (name: string): { valid: boolean; error?: string } => {
+export const validateName = (
+  name: string
+): { valid: boolean; error?: string } => {
   if (!name || name.trim().length === 0) {
     return { valid: false, error: 'Name is required' };
   }
 
   const trimmed = name.trim();
-  
+
   if (trimmed.length < 2) {
     return { valid: false, error: 'Name must be at least 2 characters' };
   }
@@ -34,7 +36,10 @@ export const validateName = (name: string): { valid: boolean; error?: string } =
 
   // Only allow letters, spaces, hyphens, and apostrophes
   if (!/^[a-zA-Z\s'-]+$/.test(trimmed)) {
-    return { valid: false, error: 'Name can only contain letters, spaces, hyphens, and apostrophes' };
+    return {
+      valid: false,
+      error: 'Name can only contain letters, spaces, hyphens, and apostrophes',
+    };
   }
 
   return { valid: true };
@@ -43,13 +48,15 @@ export const validateName = (name: string): { valid: boolean; error?: string } =
 /**
  * Validate email input
  */
-export const validateEmail = (email: string): { valid: boolean; error?: string } => {
+export const validateEmail = (
+  email: string
+): { valid: boolean; error?: string } => {
   if (!email || email.trim().length === 0) {
     return { valid: false, error: 'Email is required' };
   }
 
   const trimmed = email.trim().toLowerCase();
-  
+
   if (trimmed.length > 100) {
     return { valid: false, error: 'Email must be less than 100 characters' };
   }
@@ -65,7 +72,9 @@ export const validateEmail = (email: string): { valid: boolean; error?: string }
 /**
  * Validate password input
  */
-export const validatePassword = (password: string): { valid: boolean; error?: string } => {
+export const validatePassword = (
+  password: string
+): { valid: boolean; error?: string } => {
   if (!password || password.length === 0) {
     return { valid: false, error: 'Password is required' };
   }
@@ -81,7 +90,8 @@ export const validatePassword = (password: string): { valid: boolean; error?: st
   if (!hasUpperCase || !hasLowerCase || !hasNumber) {
     return {
       valid: false,
-      error: 'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+      error:
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number',
     };
   }
 
@@ -91,7 +101,9 @@ export const validatePassword = (password: string): { valid: boolean; error?: st
 /**
  * Validate age input
  */
-export const validateAge = (age: string | number | undefined): { valid: boolean; value?: number; error?: string } => {
+export const validateAge = (
+  age: string | number | undefined
+): { valid: boolean; value?: number; error?: string } => {
   if (age === undefined || age === null || age === '') {
     return { valid: true }; // Age is optional
   }
@@ -126,11 +138,10 @@ export const sanitizeNumber = (input: string | number): number | undefined => {
   }
 
   const num = typeof input === 'string' ? parseInt(input, 10) : input;
-  
+
   if (isNaN(num)) {
     return undefined;
   }
 
   return num;
 };
-

@@ -1,5 +1,11 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { useAuthStore } from './store/authStore';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -20,14 +26,15 @@ const theme = createTheme({
 
 // Component to handle auth initialization inside Router context
 function AuthInitializer() {
-  const fetchUser = useAuthStore((state) => state.fetchUser);
-  const initialized = useAuthStore((state) => state.initialized);
+  const fetchUser = useAuthStore(state => state.fetchUser);
+  const initialized = useAuthStore(state => state.initialized);
   const location = useLocation();
 
   // Initialize auth on app mount - only if not on auth pages
   useEffect(() => {
     if (!initialized) {
-      const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+      const isAuthPage =
+        location.pathname === '/login' || location.pathname === '/register';
       if (!isAuthPage) {
         // Only fetch user if not on login/register pages
         fetchUser();
@@ -43,7 +50,6 @@ function AuthInitializer() {
 }
 
 function App() {
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

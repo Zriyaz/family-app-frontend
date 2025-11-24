@@ -39,8 +39,8 @@ interface FamilyMember {
 }
 
 const Home = () => {
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore(state => state.user);
+  const logout = useAuthStore(state => state.logout);
   const navigate = useNavigate();
   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ const Home = () => {
       // Ensure response.data is always an array
       const members = Array.isArray(response.data) ? response.data : [];
       setFamilyMembers(members);
-    } catch (err: any) {
+    } catch {
       setError('Failed to load family members');
       // Set empty array on error to prevent map errors
       setFamilyMembers([]);
@@ -132,10 +132,9 @@ const Home = () => {
 
       handleCloseDialog();
       fetchFamilyMembers();
-    } catch (err: any) {
-      setError(
-        err.response?.data?.message || 'Failed to save family member'
-      );
+    } catch (err) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setError(error.response?.data?.message || 'Failed to save family member');
     }
   };
 
@@ -145,14 +144,16 @@ const Home = () => {
       return;
     }
 
-    if (!window.confirm('Are you sure you want to delete this family member?')) {
+    if (
+      !window.confirm('Are you sure you want to delete this family member?')
+    ) {
       return;
     }
 
     try {
       await api.delete(`/family/${id}`);
       fetchFamilyMembers();
-    } catch (err: any) {
+    } catch {
       setError('Failed to delete family member. Please try again.');
     }
   };
@@ -181,7 +182,12 @@ const Home = () => {
 
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Paper elevation={3} sx={{ padding: 4 }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+          >
             <Typography variant="h4" component="h1">
               Welcome, {user?.name}!
             </Typography>
@@ -222,11 +228,12 @@ const Home = () => {
             <Typography>Loading...</Typography>
           ) : !Array.isArray(familyMembers) || familyMembers.length === 0 ? (
             <Typography color="text.secondary">
-              No family members added yet. Click "Add Family Member" to get started.
+              No family members added yet. Click "Add Family Member" to get
+              started.
             </Typography>
           ) : (
             <Grid container spacing={2}>
-              {familyMembers.map((member) => (
+              {familyMembers.map(member => (
                 <Grid item xs={12} sm={6} md={4} key={member._id}>
                   <Card>
                     <CardContent>
@@ -263,7 +270,12 @@ const Home = () => {
         </Paper>
       </Container>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>
           {editingMember ? 'Edit Family Member' : 'Add Family Member'}
         </DialogTitle>
@@ -280,7 +292,7 @@ const Home = () => {
             fullWidth
             variant="outlined"
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onChange={e => setFormData({ ...formData, name: e.target.value })}
             sx={{ mb: 2 }}
           />
           <TextField
@@ -290,7 +302,7 @@ const Home = () => {
             fullWidth
             variant="outlined"
             value={formData.relationship}
-            onChange={(e) =>
+            onChange={e =>
               setFormData({ ...formData, relationship: e.target.value })
             }
             sx={{ mb: 2 }}
@@ -308,7 +320,7 @@ const Home = () => {
             fullWidth
             variant="outlined"
             value={formData.age}
-            onChange={(e) => {
+            onChange={e => {
               const value = e.target.value;
               // Only allow positive integers
               if (value === '' || /^\d+$/.test(value)) {
@@ -334,4 +346,3 @@ const Home = () => {
 };
 
 export default Home;
-

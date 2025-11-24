@@ -11,7 +11,11 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import { useAuthStore } from '../store/authStore';
-import { validateName, validateEmail, validatePassword } from '../utils/validation';
+import {
+  validateName,
+  validateEmail,
+  validatePassword,
+} from '../utils/validation';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -20,7 +24,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const register = useAuthStore((state) => state.register);
+  const register = useAuthStore(state => state.register);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,13 +60,15 @@ const Register = () => {
     try {
       await register(name.trim(), email.trim().toLowerCase(), password);
       navigate('/');
-    } catch (err: any) {
+    } catch (err) {
       // Don't expose detailed error messages to prevent information leakage
-      const errorMessage = err.response?.status === 409
-        ? 'An account with this email already exists'
-        : err.response?.status === 400
-        ? 'Invalid registration data. Please check your input.'
-        : 'Registration failed. Please try again.';
+      const error = err as { response?: { status?: number } };
+      const errorMessage =
+        error.response?.status === 409
+          ? 'An account with this email already exists'
+          : error.response?.status === 400
+            ? 'Invalid registration data. Please check your input.'
+            : 'Registration failed. Please try again.';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -99,7 +105,7 @@ const Register = () => {
               autoComplete="name"
               autoFocus
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -110,7 +116,7 @@ const Register = () => {
               name="email"
               autoComplete="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -122,7 +128,7 @@ const Register = () => {
               id="password"
               autoComplete="new-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -133,7 +139,7 @@ const Register = () => {
               type="password"
               id="confirmPassword"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={e => setConfirmPassword(e.target.value)}
             />
             <Button
               type="submit"
@@ -157,4 +163,3 @@ const Register = () => {
 };
 
 export default Register;
-

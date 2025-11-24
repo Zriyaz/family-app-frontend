@@ -7,8 +7,8 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const user = useAuthStore((state) => state.user);
-  const loading = useAuthStore((state) => state.loading);
+  const user = useAuthStore(state => state.user);
+  const loading = useAuthStore(state => state.loading);
 
   if (loading) {
     return (
@@ -29,4 +29,3 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   return <>{children}</>;
 };
-
